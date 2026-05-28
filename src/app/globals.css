@@ -253,3 +253,326 @@
 .radial-glow-crimson {
   background: radial-gradient(circle 450px at var(--x, 50%) var(--y, 50%), rgba(255, 51, 102, 0.08), transparent 80%);
 }
+
+/* ─── CINEMATIC KEYFRAMES ──────────────────────────────────────────────────── */
+
+@keyframes shimmer-text {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes line-draw {
+  from { width: 0%; opacity: 0; }
+  to   { width: 100%; opacity: 1; }
+}
+
+@keyframes glow-pulse-cyan {
+  0%, 100% { box-shadow: 0 0 15px rgba(0, 194, 255, 0.15); }
+  50%       { box-shadow: 0 0 35px rgba(0, 194, 255, 0.45), 0 0 60px rgba(0, 194, 255, 0.15); }
+}
+
+@keyframes glow-pulse-crimson {
+  0%, 100% { box-shadow: 0 0 15px rgba(255, 51, 102, 0.15); }
+  50%       { box-shadow: 0 0 35px rgba(255, 51, 102, 0.45), 0 0 60px rgba(255, 51, 102, 0.15); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradient-sweep {
+  0%   { opacity: 0; transform: scaleX(0); transform-origin: left; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.6; transform: scaleX(1); }
+}
+
+@keyframes scanline-move {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(100%); }
+}
+
+/* ─── TEXT EFFECTS ─────────────────────────────────────────────────────────── */
+
+.text-shimmer {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.3) 0%,
+    rgba(255,255,255,1) 25%,
+    rgba(0, 194, 255, 0.9) 50%,
+    rgba(255,255,255,1) 75%,
+    rgba(255,255,255,0.3) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-text 4s linear infinite;
+}
+
+.text-shimmer-slow {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.5) 0%,
+    rgba(255,255,255,1) 30%,
+    rgba(0, 229, 255, 0.8) 50%,
+    rgba(255,255,255,1) 70%,
+    rgba(255,255,255,0.5) 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-text 7s linear infinite;
+}
+
+/* ─── CINEMATIC LINE DIVIDER ───────────────────────────────────────────────── */
+
+.line-draw-cyan {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,194,255,0.6), transparent);
+  animation: line-draw 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─── FLOATING ANIMATION ───────────────────────────────────────────────────── */
+
+.float-animation {
+  animation: float-y 4s ease-in-out infinite;
+}
+
+.float-animation-slow {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+.float-animation-delayed {
+  animation: float-y 4s ease-in-out 1s infinite;
+}
+
+/* ─── GLOWING PULSE UTILITIES ──────────────────────────────────────────────── */
+
+.glow-pulse-cyan {
+  animation: glow-pulse-cyan 3s ease-in-out infinite;
+}
+
+.glow-pulse-crimson {
+  animation: glow-pulse-crimson 3s ease-in-out infinite;
+}
+
+/* ─── PRODUCT BAR MOCK ─────────────────────────────────────────────────────── */
+
+.product-bar-mock {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.product-bar-mock::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.product-bar-mock::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  pointer-events: none;
+}
+
+/* ─── FLAVOUR CARD ─────────────────────────────────────────────────────────── */
+
+.flavour-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.flavour-card:hover {
+  transform: translateY(-4px);
+}
+
+.flavour-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.03) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ─── BENEFIT ORB ──────────────────────────────────────────────────────────── */
+
+.benefit-orb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.benefit-orb:hover {
+  transform: translateY(-6px);
+}
+
+.benefit-orb-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 194, 255, 0.2);
+  background: rgba(0, 194, 255, 0.05);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.benefit-orb:hover .benefit-orb-icon {
+  background: rgba(0, 194, 255, 0.12);
+  border-color: rgba(0, 194, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 194, 255, 0.25);
+}
+
+/* ─── SLOT GRID (SUBSCRIPTION) ─────────────────────────────────────────────── */
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.slot-item {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── BEFORE/AFTER TOGGLE ──────────────────────────────────────────────────── */
+
+.before-after-panel {
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── CINEMATIC SECTION INTRO ──────────────────────────────────────────────── */
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(0, 194, 255, 0.07);
+  border: 1px solid rgba(0, 194, 255, 0.18);
+  font-family: monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: rgba(0, 194, 255, 0.9);
+  text-transform: uppercase;
+}
+
+/* ─── REVIEW CARD ──────────────────────────────────────────────────────────── */
+
+.review-card {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.review-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(0, 194, 255, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── INGREDIENT REVEAL CARD ───────────────────────────────────────────────── */
+
+.ingredient-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ingredient-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 194, 255, 0.6), transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ingredient-card:hover::after {
+  transform: scaleX(1);
+}
+
+/* ─── CINEMATIC VIDEO OVERLAY ──────────────────────────────────────────────── */
+
+.cinematic-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 5, 5, 0.3) 0%,
+    rgba(5, 5, 5, 0.05) 40%,
+    rgba(5, 5, 5, 0.05) 60%,
+    rgba(5, 5, 5, 0.8) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── MAGNETIC CARD ────────────────────────────────────────────────────────── */
+
+.magnetic-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
+
+/* ─── COMMUNITY MASONRY ────────────────────────────────────────────────────── */
+
+.community-grid {
+  columns: 1;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .community-grid {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .community-grid {
+    columns: 3;
+  }
+}
+
+.community-card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  display: block;
+}

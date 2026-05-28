@@ -134,7 +134,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           {item.product.name}
                         </h4>
                         <span className="text-xs font-mono text-zinc-300 font-semibold">
-                          ${(item.product.price * item.quantity).toFixed(2)}
+                          ₹{(item.product.price * item.quantity).toFixed(2)}
                         </span>
                       </div>
                       <p className="text-[10px] font-mono text-zinc-500 uppercase truncate mt-0.5">
@@ -209,12 +209,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <div className="space-y-2 text-xs font-mono">
                   <div className="flex justify-between text-zinc-500">
                     <span>CARGO VALUE:</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>₹{subtotal.toFixed(2)}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-cyan-400">
                       <span>BIO-UPGRADE DISCOUNT:</span>
-                      <span>-${(subtotal * discount).toFixed(2)}</span>
+                      <span>-₹{(subtotal * discount).toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-zinc-500">
@@ -223,7 +223,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </div>
                   <div className="border-t border-white/[0.03] pt-2 mt-2 flex justify-between text-sm font-bold text-white tracking-widest">
                     <span>NET LOADOUT:</span>
-                    <span className="text-[#00C2FF] text-glow-cyan font-mono">${total.toFixed(2)}</span>
+                    <span className="text-[#00C2FF] text-glow-cyan font-mono">₹{total.toFixed(2)}</span>
                   </div>
                 </div>
 

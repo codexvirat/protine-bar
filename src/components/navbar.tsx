@@ -28,11 +28,11 @@ export default function Navbar({ onCartClick }: NavbarProps) {
   }, []);
 
   const navLinks = [
-    { name: "SHOP", href: "/shop" },
-    { name: "SCIENCE", href: "/science" },
-    { name: "SUBSCRIBE", href: "/subscribe" },
+    { name: "HOME", href: "/" },
+    { name: "BUY NOW", href: "/shop" },
+    { name: "PRODUCT", href: "/product/aesthetic-blueprint" },
+    { name: "SUBSCRIPTION", href: "/subscribe" },
     { name: "EXPERIENCE", href: "/experience" },
-    { name: "LABS", href: "/about" },
   ];
 
   return (
@@ -137,14 +137,6 @@ export default function Navbar({ onCartClick }: NavbarProps) {
               </Link>
             );
           })}
-          <Link
-            onClick={() => setMobileMenuOpen(false)}
-            href="/experience"
-            className="flex items-center justify-center gap-2 py-3 rounded-lg bg-[#00C2FF]/10 text-xs font-bold tracking-widest text-[#00C2FF]"
-          >
-            <Activity className="w-4 h-4" />
-            TELEMETRY MODULE
-          </Link>
         </div>
       )}
     </nav>

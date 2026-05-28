@@ -23,6 +23,7 @@ export interface Product {
   benefits: string[];
   scientificFocus: string;
   psychologicalFocus: string;
+  category: string;
 }
 
 export interface CartItem {
@@ -56,11 +57,15 @@ interface AppState {
   };
   workouts: WorkoutSim[];
   user: {
+    id?: string;
     name: string;
     email: string;
+    phone?: string;
     address?: string;
     subscribed: boolean;
+    isAdmin?: boolean;
     orders: { id: string; date: string; total: number; status: string; items: CartItem[] }[];
+    authenticated?: boolean;
   };
   
   // Actions
@@ -82,6 +87,8 @@ interface AppState {
 
   // Checkout actions
   createOrder: (address: string) => void;
+  setUser: (user: any) => void;
+  setCart: (cart: CartItem[]) => void;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -90,7 +97,7 @@ export const useStore = create<AppState>((set, get) => ({
       id: "aesthetic-blueprint",
       name: "Aesthetic Blueprint",
       tagline: "YOUR AESTHETIC BLUEPRINT IN A WRAPPER",
-      price: 4.99,
+      price: 399.00,
       rating: 4.9,
       reviewsCount: 512,
       color: "#00C2FF",
@@ -118,13 +125,14 @@ export const useStore = create<AppState>((set, get) => ({
         "Zero FODMAP Gastric Emptying Integration"
       ],
       scientificFocus: "CNS Recovery & Anabolic Support",
-      psychologicalFocus: "Elite. Optimized. Disciplined. High-Performance."
+      psychologicalFocus: "Elite. Optimized. Disciplined. High-Performance.",
+      category: "anabolic"
     },
     {
       id: "collagen-glow",
       name: "Collagen Glow",
       tagline: "COLLAGEN GLOW: REPAIR & RADIANCE",
-      price: 4.99,
+      price: 399.00,
       rating: 4.8,
       reviewsCount: 387,
       color: "#FF3366",
@@ -152,7 +160,8 @@ export const useStore = create<AppState>((set, get) => ({
         "Buffers Dermal Stress Degradation Factors"
       ],
       scientificFocus: "Beauty-Performance & Joint Integrity",
-      psychologicalFocus: "Premium Wellness. Modern Beauty Science. Healthy Lifestyle."
+      psychologicalFocus: "Premium Wellness. Modern Beauty Science. Healthy Lifestyle.",
+      category: "glow"
     }
   ],
   cart: [],
@@ -173,15 +182,15 @@ export const useStore = create<AppState>((set, get) => ({
   },
   workouts: [],
   user: {
-    name: "Alex Stark",
-    email: "stark@aesthetix.lab",
-    address: "10880 Wilshire Blvd, Los Angeles, CA 90024",
+    name: "Guest Athlete",
+    email: "",
     subscribed: false,
+    authenticated: false,
     orders: [
       {
         id: "AST-8201",
         date: "2026-05-18",
-        total: 59.88,
+        total: 4788.00,
         status: "Delivered",
         items: [
           {
@@ -189,7 +198,7 @@ export const useStore = create<AppState>((set, get) => ({
               id: "aesthetic-blueprint",
               name: "Aesthetic Blueprint",
               tagline: "YOUR AESTHETIC BLUEPRINT IN A WRAPPER",
-              price: 4.99,
+              price: 399.00,
               rating: 4.9,
               reviewsCount: 512,
               color: "#00C2FF",
@@ -217,6 +226,16 @@ export const useStore = create<AppState>((set, get) => ({
   addToCart: (product, quantity = 1) => {
     set((state) => {
       const existing = state.cart.find((item) => item.product.id === product.id);
+      const newQty = existing ? existing.quantity + quantity : quantity;
+      
+      if (state.user.authenticated) {
+        fetch("/api/cart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId: product.id, quantity: newQty }),
+        }).catch(err => console.error("Sync cart error:", err));
+      }
+
       if (existing) {
         return {
           cart: state.cart.map((item) =>
@@ -231,13 +250,34 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   removeFromCart: (productId) => {
-    set((state) => ({
-      cart: state.cart.filter((item) => item.product.id !== productId)
-    }));
+    set((state) => {
+      if (state.user.authenticated) {
+        fetch(`/api/cart?productId=${productId}`, {
+          method: "DELETE",
+        }).catch(err => console.error("Sync cart error:", err));
+      }
+      return {
+        cart: state.cart.filter((item) => item.product.id !== productId)
+      };
+    });
   },
 
   updateCartQuantity: (productId, quantity) => {
     set((state) => {
+      if (state.user.authenticated) {
+        if (quantity <= 0) {
+          fetch(`/api/cart?productId=${productId}`, {
+            method: "DELETE",
+          }).catch(err => console.error("Sync cart error:", err));
+        } else {
+          fetch("/api/cart", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId, quantity }),
+          }).catch(err => console.error("Sync cart error:", err));
+        }
+      }
+
       if (quantity <= 0) {
         return {
           cart: state.cart.filter((item) => item.product.id !== productId)
@@ -251,7 +291,16 @@ export const useStore = create<AppState>((set, get) => ({
     });
   },
 
-  clearCart: () => set({ cart: [] }),
+  clearCart: () => {
+    set((state) => {
+      if (state.user.authenticated) {
+        fetch("/api/cart", {
+          method: "DELETE",
+        }).catch(err => console.error("Sync cart error:", err));
+      }
+      return { cart: [] };
+    });
+  },
 
   updateSubscriptionBox: (productId, count) => {
     set((state) => {
@@ -394,5 +443,8 @@ export const useStore = create<AppState>((set, get) => ({
         }
       };
     });
-  }
+  },
+
+  setUser: (user) => set({ user }),
+  setCart: (cart) => set({ cart })
 }));

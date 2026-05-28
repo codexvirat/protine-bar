@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Lenis from "lenis";
 import Navbar from "./navbar";
 import CartDrawer from "./cart-drawer";
+import { useStore } from "@/lib/store";
 import { usePathname } from "next/navigation";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
@@ -35,6 +36,44 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       lenis.destroy();
     };
   }, [pathname]);
+
+  const setUser = useStore((state) => state.setUser);
+  const setCart = useStore((state) => state.setCart);
+
+  useEffect(() => {
+    async function initSession() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser({ ...data.user, authenticated: true });
+          
+          // Fetch user's persistent cart from DB
+          const cartRes = await fetch("/api/cart");
+          if (cartRes.ok) {
+            const cartData = await cartRes.json();
+            const formattedCart = cartData.items.map((item: any) => ({
+              product: item.product,
+              quantity: item.quantity
+            }));
+            setCart(formattedCart);
+          }
+        } else {
+          setUser({
+            name: "Guest Athlete",
+            email: "",
+            subscribed: false,
+            authenticated: false,
+            orders: []
+          });
+        }
+      } catch (err) {
+        console.error("Session sync failed:", err);
+      }
+    }
+    
+    initSession();
+  }, [setUser, setCart]);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#050505] text-[#F5F7FA] relative antialiased selection:bg-[#00C2FF]/30 selection:text-[#00C2FF]">
