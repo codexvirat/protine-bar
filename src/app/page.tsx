@@ -275,7 +275,116 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════════════
-          SCENE 2 — MOLECULAR INGREDIENT EMERGENCE
+          SCENE 2 — PRODUCT STACKS & DEPLOYMENT
+      ════════════════════════════════════════════════════════════════════ */}
+      <section className="relative w-full py-32 bg-[#07070a] border-b border-white/[0.03] px-6 sm:px-12 md:px-24">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={stagger}
+            className="text-center max-w-2xl mx-auto mb-20 space-y-4"
+          >
+            <motion.span variants={fadeUp} className="section-label mx-auto">
+              SCENE 02 // PRODUCT STACKS & DEPLOYMENT
+            </motion.span>
+            <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-black tracking-widest text-white uppercase">
+              AESTHETIX NUTRITIONAL LOADOUT
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-sm text-zinc-400 leading-relaxed">
+              Compare formulations. Select your cartridge system based on dynamic biometric requirements.
+            </motion.p>
+          </motion.div>
+
+          {/* Product Cards */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={stagger}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+          >
+            {products.map((product) => (
+              <motion.div
+                key={product.id}
+                variants={scaleIn}
+                className="group relative rounded-2xl border border-white/[0.04] bg-white/[0.01] overflow-hidden flex flex-col justify-between hover:border-white/[0.1] hover:bg-white/[0.02] transition-all duration-500 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)] scanlines p-8"
+              >
+                {/* Visual Block */}
+                <div
+                  className="h-44 w-full relative flex items-center justify-center border border-white/[0.02] rounded-xl mb-6 overflow-hidden"
+                  style={{ backgroundColor: `${product.color}07` }}
+                >
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                    style={{ background: `radial-gradient(circle at 50% 50%, ${product.color}15, transparent 70%)` }}
+                  />
+                  <div
+                    className="absolute w-24 h-24 rounded-full filter blur-[35px] opacity-15 group-hover:opacity-35 transition-all duration-500"
+                    style={{ backgroundColor: product.color }}
+                  />
+                  <div
+                    className="w-40 h-12 rounded-xl flex items-center justify-center border text-[10px] font-mono font-black select-none tracking-widest rotate-[-4deg] group-hover:rotate-0 transition-transform duration-500 product-bar-mock"
+                    style={{
+                      backgroundColor: `${product.color}22`,
+                      borderColor: `${product.color}60`,
+                      color: product.color,
+                      boxShadow: `0 0 20px ${product.color}20`,
+                    }}
+                  >
+                    {product.name.split(" ").map((w) => w[0]).join("")} CARTRIDGE
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="space-y-4 flex-1">
+                  <div>
+                    <span className="text-[9px] font-mono font-bold tracking-widest uppercase block" style={{ color: product.color }}>
+                      {product.scientificFocus}
+                    </span>
+                    <h3 className="text-lg font-black tracking-widest text-white uppercase mt-1">{product.name}</h3>
+                    <p className="text-[9px] font-mono text-zinc-500 uppercase">{product.flavorProfile}</p>
+                  </div>
+
+                  <p className="text-xs text-zinc-400 leading-relaxed font-sans">{product.description}</p>
+
+                  <div className="p-4 rounded-lg bg-white/[0.01] border border-white/[0.03] space-y-1 text-[9px] font-mono text-zinc-500">
+                    <span className="text-zinc-600 block mb-1">PSYCHOLOGICAL PROFILE:</span>
+                    <span className="text-zinc-300 font-bold block">{product.psychologicalFocus}</span>
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-2 border-t border-white/[0.04] pt-4 text-center font-mono text-[9px] text-zinc-500">
+                    <div><span className="block text-white font-bold">{product.nutrition.protein}</span><span>PROTEIN</span></div>
+                    <div><span className="block text-white font-bold">{product.nutrition.carbs}</span><span>CARBS</span></div>
+                    <div><span className="block text-white font-bold">{product.nutrition.calories}</span><span>KCAL</span></div>
+                    <div><span className="block font-bold" style={{ color: product.color }}>₹{product.price}</span><span>RETAIL</span></div>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex gap-3 border-t border-white/[0.04] pt-6">
+                  <Link
+                    href={`/product/${product.id}`}
+                    className="flex-1 text-center py-3 rounded-lg border border-white/[0.05] bg-white/[0.02] hover:bg-white/[0.06] text-[10px] font-bold tracking-widest text-white transition-colors uppercase"
+                  >
+                    EXAMINE SPECS
+                  </Link>
+                  <button
+                    onClick={() => addToCart(product, 1)}
+                    className="flex-1 py-3 rounded-lg text-[10px] font-black tracking-widest text-black transition-all hover:opacity-90 cursor-pointer uppercase"
+                    style={{ backgroundColor: product.color, boxShadow: `0 0 15px ${product.color}33` }}
+                  >
+                    ADD CARGO
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════════════
+          SCENE 3 — MOLECULAR INGREDIENT EMERGENCE
       ════════════════════════════════════════════════════════════════════ */}
       <section id="formula" className="relative w-full py-32 bg-[#07070a] border-y border-white/[0.03] px-6 sm:px-12 md:px-24 overflow-hidden">
         {/* Ambient grid */}
@@ -292,7 +401,7 @@ export default function Home() {
             className="text-center max-w-2xl mx-auto mb-20 space-y-4"
           >
             <motion.span variants={fadeUp} className="section-label mx-auto">
-              SCENE 02 // ACTIVE COMPOUND EMERGENCE
+              SCENE 03 // ACTIVE COMPOUND EMERGENCE
             </motion.span>
             <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-black tracking-widest text-white uppercase">
               THE BIOCELLULAR CORE
@@ -368,7 +477,7 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════════════
-          SCENE 3 — PERFORMANCE BENEFITS (Orbital orb grid)
+          SCENE 4 — PERFORMANCE BENEFITS (Orbital orb grid)
       ════════════════════════════════════════════════════════════════════ */}
       <section className="relative w-full py-32 px-6 sm:px-12 md:px-24 overflow-hidden">
         {/* Subtle glow */}
@@ -383,7 +492,7 @@ export default function Home() {
             className="text-center max-w-2xl mx-auto mb-20 space-y-4"
           >
             <motion.span variants={fadeUp} className="section-label mx-auto">
-              SCENE 03 // BIO-RESPONSE PROFILES
+              SCENE 04 // BIO-RESPONSE PROFILES
             </motion.span>
             <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-black tracking-widest text-white uppercase">
               WHAT IT DOES TO YOU
@@ -448,7 +557,7 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════════════
-          SCENE 4 — FLAVOUR EXPERIENCE
+          SCENE 5 — FLAVOUR EXPERIENCE
       ════════════════════════════════════════════════════════════════════ */}
       <section className="relative w-full py-32 bg-[#06060A] border-y border-white/[0.03] px-6 sm:px-12 md:px-24 overflow-hidden">
         <div className="absolute inset-0 bg-cyber-grid opacity-10 pointer-events-none" />
@@ -462,7 +571,7 @@ export default function Home() {
             className="text-center max-w-2xl mx-auto mb-20 space-y-4"
           >
             <motion.span variants={fadeUp} className="section-label mx-auto">
-              SCENE 04 // SENSORY ENVIRONMENT
+              SCENE 05 // SENSORY ENVIRONMENT
             </motion.span>
             <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-black tracking-widest text-white uppercase">
               THE FLAVOUR UNIVERSE
@@ -574,7 +683,7 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════════════════════════════════════
-          SCENE 5 — SOCIAL PROOF (Reviews + aggregate)
+          SCENE 6 — SOCIAL PROOF (Reviews + aggregate)
       ════════════════════════════════════════════════════════════════════ */}
       <section className="relative w-full py-32 px-6 sm:px-12 md:px-24 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_100%,rgba(0,194,255,0.03),transparent)] pointer-events-none" />
@@ -588,7 +697,7 @@ export default function Home() {
             className="text-center max-w-2xl mx-auto mb-16 space-y-4"
           >
             <motion.span variants={fadeUp} className="section-label mx-auto">
-              SCENE 05 // ATHLETE SIGNAL
+              SCENE 06 // ATHLETE SIGNAL
             </motion.span>
             <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-black tracking-widest text-white uppercase">
               FIELD REPORTS
@@ -669,125 +778,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════════════════
-          SCENE 6 — PRODUCT STACKS (upgraded with motion)
-      ════════════════════════════════════════════════════════════════════ */}
       <section className="relative w-full py-32 bg-[#07070a] border-t border-white/[0.03] px-6 sm:px-12 md:px-24">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={stagger}
-            className="text-center max-w-2xl mx-auto mb-20 space-y-4"
-          >
-            <motion.span variants={fadeUp} className="section-label mx-auto">
-              SCENE 06 // PRODUCT STACKS & DEPLOYMENT
-            </motion.span>
-            <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-black tracking-widest text-white uppercase">
-              AESTHETIX NUTRITIONAL LOADOUT
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-sm text-zinc-400 leading-relaxed">
-              Compare formulations. Select your cartridge system based on dynamic biometric requirements.
-            </motion.p>
-          </motion.div>
-
-          {/* Product Cards */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={stagger}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-          >
-            {products.map((product) => (
-              <motion.div
-                key={product.id}
-                variants={scaleIn}
-                className="group relative rounded-2xl border border-white/[0.04] bg-white/[0.01] overflow-hidden flex flex-col justify-between hover:border-white/[0.1] hover:bg-white/[0.02] transition-all duration-500 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)] scanlines p-8"
-              >
-                {/* Visual Block */}
-                <div
-                  className="h-44 w-full relative flex items-center justify-center border border-white/[0.02] rounded-xl mb-6 overflow-hidden"
-                  style={{ backgroundColor: `${product.color}07` }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                    style={{ background: `radial-gradient(circle at 50% 50%, ${product.color}15, transparent 70%)` }}
-                  />
-                  <div
-                    className="absolute w-24 h-24 rounded-full filter blur-[35px] opacity-15 group-hover:opacity-35 transition-all duration-500"
-                    style={{ backgroundColor: product.color }}
-                  />
-                  <div
-                    className="w-40 h-12 rounded-xl flex items-center justify-center border text-[10px] font-mono font-black select-none tracking-widest rotate-[-4deg] group-hover:rotate-0 transition-transform duration-500 product-bar-mock"
-                    style={{
-                      backgroundColor: `${product.color}22`,
-                      borderColor: `${product.color}60`,
-                      color: product.color,
-                      boxShadow: `0 0 20px ${product.color}20`,
-                    }}
-                  >
-                    {product.name.split(" ").map((w) => w[0]).join("")} CARTRIDGE
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="space-y-4 flex-1">
-                  <div>
-                    <span className="text-[9px] font-mono font-bold tracking-widest uppercase block" style={{ color: product.color }}>
-                      {product.scientificFocus}
-                    </span>
-                    <h3 className="text-lg font-black tracking-widest text-white uppercase mt-1">{product.name}</h3>
-                    <p className="text-[9px] font-mono text-zinc-500 uppercase">{product.flavorProfile}</p>
-                  </div>
-
-                  <p className="text-xs text-zinc-400 leading-relaxed font-sans">{product.description}</p>
-
-                  <div className="p-4 rounded-lg bg-white/[0.01] border border-white/[0.03] space-y-1 text-[9px] font-mono text-zinc-500">
-                    <span className="text-zinc-600 block mb-1">PSYCHOLOGICAL PROFILE:</span>
-                    <span className="text-zinc-300 font-bold block">{product.psychologicalFocus}</span>
-                  </div>
-
-                  <div className="grid grid-cols-4 gap-2 border-t border-white/[0.04] pt-4 text-center font-mono text-[9px] text-zinc-500">
-                    <div><span className="block text-white font-bold">{product.nutrition.protein}</span><span>PROTEIN</span></div>
-                    <div><span className="block text-white font-bold">{product.nutrition.carbs}</span><span>CARBS</span></div>
-                    <div><span className="block text-white font-bold">{product.nutrition.calories}</span><span>KCAL</span></div>
-                    <div><span className="block font-bold" style={{ color: product.color }}>${product.price}</span><span>RETAIL</span></div>
-                  </div>
-                </div>
-
-                <div className="mt-8 flex gap-3 border-t border-white/[0.04] pt-6">
-                  <Link
-                    href={`/product/${product.id}`}
-                    className="flex-1 text-center py-3 rounded-lg border border-white/[0.05] bg-white/[0.02] hover:bg-white/[0.06] text-[10px] font-bold tracking-widest text-white transition-colors uppercase"
-                  >
-                    EXAMINE SPECS
-                  </Link>
-                  <button
-                    onClick={() => addToCart(product, 1)}
-                    className="flex-1 py-3 rounded-lg text-[10px] font-black tracking-widest text-black transition-all hover:opacity-90 cursor-pointer uppercase"
-                    style={{ backgroundColor: product.color, boxShadow: `0 0 15px ${product.color}33` }}
-                  >
-                    ADD CARGO
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
           {/* Subscription banner */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
             variants={fadeUp}
-            className="mt-20 p-8 sm:p-12 rounded-3xl border border-white/[0.04] bg-[#030305] relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-8 scanlines"
+            className="p-8 sm:p-12 rounded-3xl border border-white/[0.04] bg-[#030305] relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-8 scanlines"
           >
             <div className="absolute top-1/2 left-[-10%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(0,194,255,0.04)_0%,transparent_70%)] pointer-events-none" />
 
             <div className="space-y-4 max-w-xl relative z-10">
-              <span className="section-label">SUBSCRIPTION PROTOCOLS</span>
+              <span className="section-label">SCENE 07 // SUBSCRIPTION PROTOCOLS</span>
               <h2 className="text-2xl font-black tracking-widest text-white uppercase">NEVER ALLOW YOUR RECOVERY GAP TO COLLAPSE</h2>
               <p className="text-xs text-zinc-400 leading-relaxed font-sans">
                 Save 15% on regular deployments by building a custom 12-pack cartridge containing balanced levels of Aesthetic Blueprint and Collagen Glow.

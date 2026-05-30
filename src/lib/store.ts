@@ -89,6 +89,10 @@ interface AppState {
   createOrder: (address: string) => void;
   setUser: (user: any) => void;
   setCart: (cart: CartItem[]) => void;
+  promoCode: string;
+  discount: number;
+  applyPromoCode: (code: string) => boolean;
+  clearPromoCode: () => void;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -165,6 +169,8 @@ export const useStore = create<AppState>((set, get) => ({
     }
   ],
   cart: [],
+  promoCode: "",
+  discount: 0,
   subscription: {
     items: {
       "aesthetic-blueprint": 6,
@@ -225,6 +231,7 @@ export const useStore = create<AppState>((set, get) => ({
   // Actions
   addToCart: (product, quantity = 1) => {
     set((state) => {
+      const fullProduct = state.products.find((p) => p.id === product.id) || product;
       const existing = state.cart.find((item) => item.product.id === product.id);
       const newQty = existing ? existing.quantity + quantity : quantity;
       
@@ -240,12 +247,12 @@ export const useStore = create<AppState>((set, get) => ({
         return {
           cart: state.cart.map((item) =>
             item.product.id === product.id
-              ? { ...item, quantity: item.quantity + quantity }
+              ? { ...item, product: { ...item.product, ...fullProduct }, quantity: item.quantity + quantity }
               : item
           )
         };
       }
-      return { cart: [...state.cart, { product, quantity }] };
+      return { cart: [...state.cart, { product: fullProduct, quantity }] };
     });
   },
 
@@ -298,7 +305,7 @@ export const useStore = create<AppState>((set, get) => ({
           method: "DELETE",
         }).catch(err => console.error("Sync cart error:", err));
       }
-      return { cart: [] };
+      return { cart: [], promoCode: "", discount: 0 };
     });
   },
 
@@ -446,5 +453,24 @@ export const useStore = create<AppState>((set, get) => ({
   },
 
   setUser: (user) => set({ user }),
-  setCart: (cart) => set({ cart })
+  setCart: (cart) => set((state) => {
+    const enrichedCart = cart.map((item) => {
+      const fullProduct = state.products.find((p) => p.id === item.product.id);
+      return {
+        ...item,
+        product: fullProduct ? { ...item.product, ...fullProduct } : item.product
+      };
+    });
+    return { cart: enrichedCart };
+  }),
+  applyPromoCode: (code) => {
+    if (code.trim().toUpperCase() === "BIO-UPGRADE") {
+      set({ promoCode: "BIO-UPGRADE", discount: 0.15 });
+      return true;
+    }
+    return false;
+  },
+  clearPromoCode: () => {
+    set({ promoCode: "", discount: 0 });
+  }
 }));

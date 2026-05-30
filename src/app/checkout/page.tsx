@@ -11,6 +11,8 @@ export default function CheckoutPage() {
   const cart = useStore((state) => state.cart);
   const user = useStore((state) => state.user);
   const clearCart = useStore((state) => state.clearCart);
+  const discount = useStore((state) => state.discount);
+  const promoCode = useStore((state) => state.promoCode);
   
   const router = useRouter();
 
@@ -62,8 +64,7 @@ export default function CheckoutPage() {
 
   // Total pricing calculations
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const discountRate = 0.00; // Local discount calculations can go here
-  const discountAmount = subtotal * discountRate;
+  const discountAmount = subtotal * discount;
   const netTotal = subtotal - discountAmount;
 
   // Handle Order Initialization
@@ -91,6 +92,7 @@ export default function CheckoutPage() {
           state: stateName,
           pincode,
           biomarkerToken,
+          promoCode,
         }),
       });
 
@@ -345,6 +347,12 @@ export default function CheckoutPage() {
                   <span>CARGO VALUE:</span>
                   <span>₹{subtotal.toFixed(2)}</span>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-cyan-400">
+                    <span>{promoCode} DISCOUNT:</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>EXPRESS SHIPPING:</span>
                   <span className="text-[#00C2FF] font-bold">COMPLIMENTARY</span>

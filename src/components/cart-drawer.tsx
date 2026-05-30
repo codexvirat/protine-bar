@@ -15,14 +15,23 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const cart = useStore((state) => state.cart);
   const updateQuantity = useStore((state) => state.updateCartQuantity);
   const removeItem = useStore((state) => state.removeFromCart);
+  const promoCodeStore = useStore((state) => state.promoCode);
+  const discountStore = useStore((state) => state.discount);
+  const applyPromoCodeStore = useStore((state) => state.applyPromoCode);
   
-  const [promoCode, setPromoCode] = useState("");
-  const [discount, setDiscount] = useState(0);
+  const [promoInput, setPromoInput] = useState(promoCodeStore || "");
   const [promoError, setPromoError] = useState("");
-  const [promoSuccess, setPromoSuccess] = useState("");
+  const [promoSuccess, setPromoSuccess] = useState(
+    promoCodeStore ? "15% SYSTEM DISCOUNT APPLIED" : ""
+  );
 
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const total = subtotal * (1 - discount);
+  const total = subtotal * (1 - discountStore);
+
+  useEffect(() => {
+    setPromoInput(promoCodeStore);
+    setPromoSuccess(promoCodeStore ? "15% SYSTEM DISCOUNT APPLIED" : "");
+  }, [promoCodeStore]);
 
   // Close drawer on escape key
   useEffect(() => {
@@ -40,8 +49,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   }, [isOpen, onClose]);
 
   const applyPromo = () => {
-    if (promoCode.trim().toUpperCase() === "BIO-UPGRADE") {
-      setDiscount(0.15);
+    const success = applyPromoCodeStore(promoInput);
+    if (success) {
       setPromoSuccess("15% SYSTEM DISCOUNT APPLIED");
       setPromoError("");
     } else {
@@ -60,7 +69,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-[#020204]/80 backdrop-blur-sm z-50 cursor-pointer"
+            className="fixed inset-0 bg-[#020204]/80 backdrop-blur-sm z-[100] cursor-pointer"
           />
 
           {/* Drawer Panel */}
@@ -69,7 +78,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "tween", duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed right-0 top-0 bottom-0 w-full sm:w-[450px] bg-[#07070a]/95 border-l border-white/[0.04] backdrop-blur-xl z-50 flex flex-col shadow-[[-10px_0_30px_rgba(0,0,0,0.5)]] scanlines"
+            className="fixed right-0 top-0 bottom-0 w-full sm:w-[450px] bg-[#07070a]/95 border-l border-white/[0.04] backdrop-blur-xl z-[110] flex flex-col shadow-[[-10px_0_30px_rgba(0,0,0,0.5)]] scanlines"
           >
             {/* Header */}
             <div className="p-6 border-b border-white/[0.04] flex justify-between items-center bg-[#0a0a0f]/50">
@@ -88,7 +97,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </div>
 
             {/* Cart Items List */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div data-lenis-prevent className="flex-1 overflow-y-auto p-6 space-y-4">
               {cart.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center gap-4 py-20">
                   <div className="w-12 h-12 rounded-full border border-dashed border-zinc-700 flex items-center justify-center text-zinc-500">
@@ -117,12 +126,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     <div
                       className="w-16 h-16 rounded-lg flex-shrink-0 flex items-center justify-center border text-xs font-mono font-black select-none"
                       style={{
-                        backgroundColor: `${item.product.color}33`,
-                        borderColor: item.product.color,
-                        boxShadow: `0 0 10px ${item.product.color}22`
+                        backgroundColor: `${item.product.color || "#00C2FF"}33`,
+                        borderColor: item.product.color || "#00C2FF",
+                        boxShadow: `0 0 10px ${item.product.color || "#00C2FF"}22`
                       }}
                     >
-                      <span style={{ color: item.product.color }}>
+                      <span style={{ color: item.product.color || "#00C2FF" }}>
                         {item.product.name.split(" ").map((w) => w[0]).join("")}
                       </span>
                     </div>
@@ -184,8 +193,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     <input
                       type="text"
                       placeholder="ENTER PROTOCOL KEY (BIO-UPGRADE)"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
+                      value={promoInput}
+                      onChange={(e) => setPromoInput(e.target.value)}
                       className="bg-transparent border-0 outline-none flex-1 px-3 text-[10px] font-mono tracking-wider text-white placeholder-zinc-600 focus:ring-0 uppercase"
                     />
                     <button
@@ -211,10 +220,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     <span>CARGO VALUE:</span>
                     <span>₹{subtotal.toFixed(2)}</span>
                   </div>
-                  {discount > 0 && (
+                  {discountStore > 0 && (
                     <div className="flex justify-between text-cyan-400">
                       <span>BIO-UPGRADE DISCOUNT:</span>
-                      <span>-₹{(subtotal * discount).toFixed(2)}</span>
+                      <span>-₹{(subtotal * discountStore).toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-zinc-500">

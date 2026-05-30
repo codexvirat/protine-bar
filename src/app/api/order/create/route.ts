@@ -9,7 +9,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, phone, email, address, city, state, pincode, biomarkerToken } = await request.json();
+    const { name, phone, email, address, city, state, pincode, biomarkerToken, promoCode } = await request.json();
 
     if (!name || !phone || !email || !address || !city || !state || !pincode) {
       return NextResponse.json(
@@ -39,7 +39,9 @@ export async function POST(request: Request) {
     }
 
     // Calculate subtotal
-    const totalAmount = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const discount = promoCode === "BIO-UPGRADE" ? 0.15 : 0.0;
+    const totalAmount = subtotal * (1 - discount);
 
     // Generate unique order reference code
     const orderNumber = `AEST-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;

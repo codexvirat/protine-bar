@@ -10,8 +10,11 @@ export default function CartPage() {
   const user = useStore((state) => state.user);
   const updateQuantity = useStore((state) => state.updateCartQuantity);
   const removeItem = useStore((state) => state.removeFromCart);
+  const discount = useStore((state) => state.discount);
+  const promoCode = useStore((state) => state.promoCode);
 
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const netTotal = subtotal * (1 - discount);
 
   return (
     <div className="w-full bg-[#050505] text-[#F5F7FA] min-h-screen py-32 px-6 sm:px-12 md:px-24 relative">
@@ -62,19 +65,19 @@ export default function CartPage() {
                   <div
                     className="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center border font-mono text-xs font-black select-none"
                     style={{
-                      backgroundColor: `${item.product.color}22`,
-                      borderColor: `${item.product.color}40`,
-                      boxShadow: `0 0 15px ${item.product.color}15`
+                      backgroundColor: `${item.product.color || "#00C2FF"}22`,
+                      borderColor: `${item.product.color || "#00C2FF"}40`,
+                      boxShadow: `0 0 15px ${item.product.color || "#00C2FF"}15`
                     }}
                   >
-                    <span style={{ color: item.product.color }}>
+                    <span style={{ color: item.product.color || "#00C2FF" }}>
                       {item.product.name.split(" ").map((w) => w[0]).join("")}
                     </span>
                   </div>
 
                   {/* Information block */}
                   <div className="flex-1 text-center sm:text-left min-w-0 space-y-1">
-                    <span className="text-[8px] font-mono font-bold tracking-widest uppercase block" style={{ color: item.product.color }}>
+                    <span className="text-[8px] font-mono font-bold tracking-widest uppercase block" style={{ color: item.product.color || "#00C2FF" }}>
                       {item.product.category} Formulation
                     </span>
                     <h3 className="text-lg font-black tracking-widest text-white uppercase truncate">
@@ -147,13 +150,19 @@ export default function CartPage() {
                     <span>CARGO VALUE:</span>
                     <span className="text-zinc-300">₹{subtotal.toFixed(2)}</span>
                   </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-[#00C2FF]">
+                      <span>{promoCode} DISCOUNT:</span>
+                      <span>-₹{(subtotal * discount).toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span>SHIPPING ROUTING:</span>
                     <span className="text-emerald-400 font-bold">COMPLIMENTARY</span>
                   </div>
                   <div className="border-t border-white/[0.03] pt-3 mt-3 flex justify-between text-sm font-bold text-white tracking-widest">
                     <span>NET TOTAL:</span>
-                    <span className="text-[#00C2FF] text-glow-cyan font-mono">₹{subtotal.toFixed(2)}</span>
+                    <span className="text-[#00C2FF] text-glow-cyan font-mono">₹{netTotal.toFixed(2)}</span>
                   </div>
                 </div>
 
